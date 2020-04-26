@@ -4,20 +4,30 @@ window.onload = () => {
     // let display = new DOMDisplay(document.body, simpleLevel);
     // display.syncState(State.start(simpleLevel));
     runGame(GAME_LEVELS, DOMDisplay);
+
+    let levelSpan = document.querySelector('#levelSpan');
+    let livesSpan = document.querySelector('#livesSpan');
+    let coinsSpan = document.querySelector('#coinsSpan');
+    let scoreSpan = document.querySelector('#scoreSpan');
+    let messageSpan = document.querySelector('#messageSpan');
+
+
 }
+
+
 
 /// ----------- Main Level Plan ----------- ///
 
 var simpleLevelPlan = `
-......................
-..#................#..
-..#..............=.#..
-..#.........o.o....#..
-..#.@......#####...#..
-..#####............#..
-......#++++++++++++#..
-......##############..
-......................`;
+..............................
+......#................#......
+......#..............=.#......
+......#.........o.o....#......
+......#.@......#####...#......
+......#####............#......
+..........#++++++++++++#......
+..........##############......
+..............................`;
 
 /// ------------ Create Level Reader ----------- ///
 
@@ -28,14 +38,10 @@ var simpleLevelPlan = `
 
 class Level {
     constructor(plan) {
-        let rows = plan.trim().split("\n").map(item => item.split("")) 
-        //let rows = plan.trim().split("\n").map(l => [...l]);
-        // console.log(rows);
-        
+        let rows = plan.trim().split("\n").map(item => item.split(""))         
         this.height = rows.length;
         this.width = rows[0].length;
-        // stored in an array of objects
-        this.startActors = [];
+        this.startActors = []; // stored in an array of objects
         
         // each 'rows' holds an array of arrays with characters, the rows of the level plan.
         // map passes the array index as a second argument to the mapping function,
@@ -387,8 +393,14 @@ State.prototype.update = function(time, keys) {
     // The first thing it does is call the update method on all actors, producing an array of updated actors.
     // only the player will actually read keys, since that’s the only actor that’s controlled
     // by the keyboard.
+    
     let actors = this.actors.map(actor => actor.update(time, this, keys));
-    // console.log(actors);
+
+    // counts the coints inside the level and write this number inside the coinsSpan
+    // console.log(actors);    
+    let coinFiltered = actors.filter(actor => actor.type == "coin")
+    console.log(coinFiltered);
+    coinsSpan.innerText = coinFiltered.length;
     
     let newState = new State(this.level, actors, this.status);
 
@@ -401,6 +413,7 @@ State.prototype.update = function(time, keys) {
 
     // the method tests whether the player is touching background lava. if so the game is lost
     if (this.level.touches(player.pos, player.size, "lava")) {
+        console.log("lava");
         return new State(this.level, actors, "lost");
     }
     // if the game really is still going on, it sees whether any
@@ -426,22 +439,35 @@ function overlap(actor1, actor2) {
 // if the actors overlap the collide method updates the state.
 // touching lava will change the status to "lost"
 Lava.prototype.collide = function(state) {
+    console.log("lava");
     return new State(state.level, state.actors, "lost");
 }
+
+
+let scoreCounter = 0;
 // if touching the coins they will vanish 
 Coin.prototype.collide = function(state) {
     // console.log(this);
+    console.log("coin");
     
     let filtered = state.actors.filter(a => a != this);
+    // console.log(this);
+    
     // console.log(state.actors);
     // console.log(filtered);
+    // console.log(filtered.length);
+
+    scoreSpan.innerText = scoreCounter += 100;
+
+    
     
     let status = state.status;
- // if touching the last coins the status is changed to "won"
+    // if touching the last coins the status is changed to "won"
     // ? wenn durch .some kein Akteur mehr mit type "coin" gefunden wird, ist das Spiel gewonnen
     // ! dreht true zu false
     if (!filtered.some(a => a.type == "coin")) {
         status = "won";
+        console.log("halo");
     }
     return new State(state.level, filtered, status);
 }
@@ -520,8 +546,10 @@ Player.prototype.update = function (time, state, keys) {
 
     if (!state.level.touches(movedY, this.size, "wall")) {
         pos = movedY;
+        // console.log("jump");
     } else if (keys.ArrowUp && ySpeed > 0) {
         ySpeed = -jumpSpeed;
+        console.log("jump");
     } else {
         ySpeed = 0;
     }
@@ -537,8 +565,10 @@ function trackKeys(keys) {
         // console.log(event);
         if (keys.includes(event.key)) {
             down[event.key] = event.type == "keydown";
-            // console.log(down);
             event.preventDefault();
+            // if (event.key == "ArrowUp") {
+            //     console.log("jump");
+            // }
         }
     }
     window.addEventListener("keydown", track);
@@ -590,13 +620,25 @@ function runLevel(level, Display){
 }
 
 async function runGame(plans, Display){
-    for(let level = 0; level < plans.length;){
+    let lives = 3;
+    for(let level = 0; level < plans.length && lives > 0;){
+        // console.log(`Level ${level + 1}, lives: ${lives}`);
+        levelSpan.innerText = level + 1;
+        livesSpan.innerText = lives;
         let status = await runLevel(new Level(plans[level]), Display);
-
         if(status == "won"){
             level++;
-            console.log("won");  
+        } else {
+            lives--;
         }
     }
-    console.log("You've Won!!!");
+    if (lives > 0) {
+        console.log("You've won!");
+        messageSpan.innerText = "You've won!";
+    } else {
+        console.log("Game over");
+        messageSpan.innerText = "Game Over";
+        livesSpan.innerText = lives;
+    }
 }
+
