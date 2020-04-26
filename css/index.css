@@ -24,6 +24,7 @@
 
 .coin {
     background: rgb(241, 229, 89);
+    border-radius: 50%;
 }
 
 .player {
