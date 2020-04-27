@@ -1,14 +1,16 @@
 
 window.onload = () => {
-    // let simpleLevel = new Level(simpleLevelPlan);
-    // let display = new DOMDisplay(document.body, simpleLevel);
-    // display.syncState(State.start(simpleLevel));
+
     runGame(GAME_LEVELS, DOMDisplay);
 
+    // sounds
+    let coinSound = document.querySelector('#coinSound');
+    // scores
     let levelSpan = document.querySelector('#levelSpan');
     let livesSpan = document.querySelector('#livesSpan');
     let coinsSpan = document.querySelector('#coinsSpan');
     let scoreSpan = document.querySelector('#scoreSpan');
+    // messages -> Won / Game Over 
     let messageSpan = document.querySelector('#messageSpan');
 
 
@@ -16,7 +18,7 @@ window.onload = () => {
 
 
 
-/// ----------- Main Level Plan ----------- ///
+/// ----------- Simple Level Plan ----------- ///
 
 var simpleLevelPlan = `
 ..............................
@@ -399,7 +401,7 @@ State.prototype.update = function(time, keys) {
     // counts the coints inside the level and write this number inside the coinsSpan
     // console.log(actors);    
     let coinFiltered = actors.filter(actor => actor.type == "coin")
-    console.log(coinFiltered);
+    // console.log(coinFiltered);
     coinsSpan.innerText = coinFiltered.length;
     
     let newState = new State(this.level, actors, this.status);
@@ -414,6 +416,7 @@ State.prototype.update = function(time, keys) {
     // the method tests whether the player is touching background lava. if so the game is lost
     if (this.level.touches(player.pos, player.size, "lava")) {
         console.log("lava");
+        coinSound.play();
         return new State(this.level, actors, "lost");
     }
     // if the game really is still going on, it sees whether any
@@ -440,6 +443,7 @@ function overlap(actor1, actor2) {
 // touching lava will change the status to "lost"
 Lava.prototype.collide = function(state) {
     console.log("lava");
+    coinSound.play();
     return new State(state.level, state.actors, "lost");
 }
 
@@ -449,14 +453,12 @@ let scoreCounter = 0;
 Coin.prototype.collide = function(state) {
     // console.log(this);
     console.log("coin");
-    
+    coinSound.play();
+
     let filtered = state.actors.filter(a => a != this);
-    // console.log(this);
-    
     // console.log(state.actors);
     // console.log(filtered);
     // console.log(filtered.length);
-
     scoreSpan.innerText = scoreCounter += 100;
 
     
@@ -468,6 +470,7 @@ Coin.prototype.collide = function(state) {
     if (!filtered.some(a => a.type == "coin")) {
         status = "won";
         console.log("halo");
+        coinSound.play();
     }
     return new State(state.level, filtered, status);
 }
@@ -550,6 +553,7 @@ Player.prototype.update = function (time, state, keys) {
     } else if (keys.ArrowUp && ySpeed > 0) {
         ySpeed = -jumpSpeed;
         console.log("jump");
+        // coinSound.play();
     } else {
         ySpeed = 0;
     }
@@ -634,9 +638,11 @@ async function runGame(plans, Display){
     }
     if (lives > 0) {
         console.log("You've won!");
+        coinSound.play();
         messageSpan.innerText = "You've won!";
     } else {
         console.log("Game over");
+        coinSound.play();
         messageSpan.innerText = "Game Over";
         livesSpan.innerText = lives;
     }
