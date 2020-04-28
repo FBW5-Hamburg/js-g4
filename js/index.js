@@ -8,11 +8,9 @@ window.onload = () => {
     let gameOverSound = document.querySelector('#gameOverSound');
     // playerNameInput and playButton
     let playerNameInput = document.querySelector('#playerNameInput');
-    let hiScoreInput = document.querySelector('#hiScoreInput');
+    // let hiScoreInput = document.querySelector('#hiScoreInput');
     let playButton = document.querySelector('#playButton');
     let highScoreList = document.querySelector('#highScoreList');
-
-
     // scores
     let levelSpan = document.querySelector('#levelSpan');
     let livesSpan = document.querySelector('#livesSpan');
@@ -21,56 +19,13 @@ window.onload = () => {
     // messages -> Won / Game Over 
     let message = document.querySelector('#message');
 
-    
-    let hiScoreArr = [];
-
     playButton.addEventListener('click', function() {
         runGame(GAME_LEVELS, DOMDisplay);
-        console.log(playerNameInput.value);
-        console.log(hiScoreInput.value);
-
-        let playerName = playerNameInput.value.trim();
-        let hiScore = hiScoreInput.value.trim();
-
-        if (playerName !== '') {
-
-            playerNameInput.value = '';
-            hiScoreInput.value = '';
-
-            let hiScoreObj = {};
-            hiScoreObj.name = playerName;
-            hiScoreObj.score = hiScore;
-            hiScoreArr.push(hiScoreObj);
-            console.log(hiScoreArr);
-
-            localStorage.setItem('hiScore', JSON.stringify(hiScoreArr));
-
-            hiScoreArr = [];
-            highScoreList.innerHTML = '';
-
-            // createHiScoreList();
-        }
+        highScoreList.innerHTML = '';
     })
 
-    createHiScoreList();
 
 }
-
-function createHiScoreList() {
-    let storageData = localStorage.getItem('hiScore');
-    if (storageData) {
-        let dataObj = JSON.parse(storageData);
-        hiScoreArr = [];
-        dataObj.forEach(player => {
-            hiScoreArr.push(player);
-            let listItem = document.createElement('li');
-            listItem.innerText = player.name + ': ' + player.score + ' Points';
-            highScoreList.append(listItem);
-        })
-    }
-}
-
-
 
 
 
@@ -704,4 +659,40 @@ async function runGame(plans, Display){
         createHiScoreList();
     }
 }
+
+/// ----------- HighScoreList ----------- ///
+
+let hiScoreArr = [];
+
+function createHiScoreList() {
+    // load items from storage
+    let storageData = localStorage.getItem('hiScore');
+    // stored playerData pushed into array
+    if (storageData) {
+        let dataObj = JSON.parse(storageData);
+        hiScoreArr = [];
+        dataObj.forEach(player => {
+            hiScoreArr.push(player);
+        })
+    }
+    // create new playerData-object and push it into array
+    let playerName = playerNameInput.value.trim();
+    if (playerName !== '') {
+        playerNameInput.value = '';
+        let hiScoreObj = {};
+        hiScoreObj.name = playerName;
+        hiScoreObj.score = scoreCounter;
+        hiScoreArr.push(hiScoreObj);
+        // console.log(hiScoreArr);
+        // create highScoreList as DOM-elements
+        hiScoreArr.forEach(player => {
+            let listItem = document.createElement('li');
+            listItem.innerText = player.name + ': ' + player.score + ' Points';
+            highScoreList.append(listItem);
+        })
+        // save new array to localStorage
+        localStorage.setItem('hiScore', JSON.stringify(hiScoreArr));
+    }
+}
+
 
