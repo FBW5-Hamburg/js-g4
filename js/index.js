@@ -23,6 +23,7 @@ window.onload = () => {
     playButton.addEventListener('click', function(){
         highScoreList.innerHTML = '';
         message.innerText = "";
+        scoreSpan.innerText = "0"
         if (switcher == true) {
             runGame(GAME_LEVELS, DOMDisplay);
         }
@@ -686,8 +687,8 @@ function createHiScoreList() {
         hiScoreObj.name = playerName;
         hiScoreObj.score = scoreCounter;
         hiScoreArr.push(hiScoreObj);
-        scoreCounter = 0; // resets the scoreCounter for the next player
-        scoreSpan.innerText = scoreCounter;
+        scoreCounter = 0; // resets the scoreCounter in the local Storage for the next player
+        // scoreSpan.innerText = scoreCounter;
         // create highScoreList as DOM-elements
         hiScoreArr.forEach(player => {
             let listItem = document.createElement('li');
