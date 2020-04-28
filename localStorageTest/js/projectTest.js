@@ -34,7 +34,7 @@ window.onload = function(){
             hiScoreArr = []; // ?
             highScoreList.innerHTML = '';
 
-            // createHiScoreList();
+            createHiScoreList();
         }
     })
 

@@ -8,7 +8,11 @@ window.onload = () => {
     let gameOverSound = document.querySelector('#gameOverSound');
     // playerNameInput and playButton
     let playerNameInput = document.querySelector('#playerNameInput');
+    let hiScoreInput = document.querySelector('#hiScoreInput');
     let playButton = document.querySelector('#playButton');
+    let highScoreList = document.querySelector('#highScoreList');
+
+
     // scores
     let levelSpan = document.querySelector('#levelSpan');
     let livesSpan = document.querySelector('#livesSpan');
@@ -17,11 +21,53 @@ window.onload = () => {
     // messages -> Won / Game Over 
     let message = document.querySelector('#message');
 
+    
+    let hiScoreArr = [];
+
     playButton.addEventListener('click', function() {
         runGame(GAME_LEVELS, DOMDisplay);
+        console.log(playerNameInput.value);
+        console.log(hiScoreInput.value);
+
+        let playerName = playerNameInput.value.trim();
+        let hiScore = hiScoreInput.value.trim();
+
+        if (playerName !== '') {
+
+            playerNameInput.value = '';
+            hiScoreInput.value = '';
+
+            let hiScoreObj = {};
+            hiScoreObj.name = playerName;
+            hiScoreObj.score = hiScore;
+            hiScoreArr.push(hiScoreObj);
+            console.log(hiScoreArr);
+
+            localStorage.setItem('hiScore', JSON.stringify(hiScoreArr));
+
+            hiScoreArr = [];
+            highScoreList.innerHTML = '';
+
+            // createHiScoreList();
+        }
     })
 
+    createHiScoreList();
 
+}
+
+function createHiScoreList() {
+    let storageData = localStorage.getItem('hiScore');
+    if (storageData) {
+        let dataObj = JSON.parse(storageData);
+        hiScoreArr = [];
+        dataObj.forEach(player => {
+            hiScoreArr.push(player);
+            let listItem = document.createElement('li');
+            listItem.innerText = player.name + ': ' + player.score + ' Points';
+            highScoreList.append(listItem);
+        })
+    }
 }
 
 
@@ -633,7 +679,7 @@ function runLevel(level, Display){
 }
 
 async function runGame(plans, Display){
-    let lives = 3;
+    let lives = 1;
     for(let level = 0; level < plans.length && lives > 0;){
         // console.log(`Level ${level + 1}, lives: ${lives}`);
         levelSpan.innerText = level + 1;
@@ -648,12 +694,14 @@ async function runGame(plans, Display){
     if (lives > 0) {
         // console.log("You've won!");
         coinSound.play();
-        message.innerText = "You've won!";
+        message.innerText = "You've Won!";
+        createHiScoreList();
     } else {
         // console.log("Game over");
         gameOverSound.play();
         message.innerText = "Game Over";
         livesSpan.innerText = lives;
+        createHiScoreList();
     }
 }
 
