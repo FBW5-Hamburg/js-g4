@@ -21,11 +21,13 @@ window.onload = () => {
 
     // activating the game with playButton
     playButton.addEventListener('click', function(){
-        scoreSpan.innerText = "00000";
-        scoreCounter = 0; // resets the scoreCounter for the next player
-        highScoreList.innerHTML = "";
-        message.innerText = "";
         if (switcher == true) {
+            scoreSpan.innerText = "00000";
+            scoreCounter = 0; // resets the scoreCounter for the next player
+            highScoreList.innerHTML = "";
+            message.innerText = "";
+            playButton.classList.remove('pause');
+            playButton.classList.add('play');
             runGame(GAME_LEVELS, DOMDisplay);
         }
     });
@@ -650,12 +652,16 @@ async function runGame(plans, Display){
         switcher = true; // switcher to true -> so game appears again after you've won and press playButton again
         coinSound.play();
         message.innerText = "You've Won!";
+        playButton.classList.remove('play');
+        playButton.classList.add('pause');
         createHiScoreList();
     } else {
         switcher = true; // switcher to true -> so game appears again after you lost and press playButton again
         gameOverSound.play();
         message.innerText = "Game Over";
         livesSpan.innerText = lives;
+        playButton.classList.remove('play');
+        playButton.classList.add('pause');
         createHiScoreList();
 
     }
