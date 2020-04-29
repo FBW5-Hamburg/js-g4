@@ -4,20 +4,10 @@
     padding: 0;
 }
 
-.game {
-    border: solid 10px white;
-    border: solid 10px black;
-    margin: 10px auto;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    box-shadow: 10px 10px 30px 0 black;
-}
-
 .background {
     background: rgb(52, 166, 251);
     table-layout: fixed;
     border-spacing: 0;  
-    /* border: solid 10px black; */
-    /* margin: 10px; */
 }
 
 .background td {
@@ -26,14 +16,13 @@
 
 .lava {
     background: rgb(255, 100, 100);
-    /* border: solid 1px black; */
     /* box-shadow: 2px 2px 1px black; */
 }
 
 .wall {
     background: white;
     border: solid 1px black;
-    /* box-shadow: 1px 1px 1px black; */
+    box-shadow: 1px 1px 1px black;
 }
 
 .actor {
@@ -44,11 +33,12 @@
     background: rgb(241, 229, 89);
     border-radius: 50%;
     /* border: solid 1px black; */
-    /* box-shadow: 2px 2px 1px black; */
+    box-shadow: 2px 2px 1px black;
 }
 
 .player {
     background: rgb(64, 64, 64);
+    /* box-shadow: 2px 2px 1px black; */
 }
 
 .lost .player {
@@ -64,6 +54,10 @@
     max-width: 600px;
     max-height: 450px;
     position: relative;
+    /* border: solid 10px black; */
+    margin: auto;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    /* box-shadow: 10px 10px 30px 0 black; */
 }
 
 #scoreContainer {
@@ -75,11 +69,20 @@
     /* flex-wrap: wrap; */
 
 }
+
 #messageContainer {
     display: flex;
     justify-content: center;
+    width: 620px;
+    height: 470px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 123px;
     /* margin: auto; */
-    /* border: solid 1px black; */
-    font-size: 50px;
-    margin: 20px;
+    border: solid 10px black;
+    box-shadow: 10px 10px 30px 0 black;
+    display: block;
+    font-size: 30px;
+
 }

@@ -21,7 +21,9 @@ window.onload = () => {
 
     // activating the game with playButton
     playButton.addEventListener('click', function(){
-        highScoreList.innerHTML = '';
+        scoreSpan.innerText = "00000";
+        scoreCounter = 0; // resets the scoreCounter for the next player
+        highScoreList.innerHTML = "";
         message.innerText = "";
         if (switcher == true) {
             runGame(GAME_LEVELS, DOMDisplay);
@@ -415,8 +417,8 @@ State.prototype.update = function(time, keys) {
     let actors = this.actors.map(actor => actor.update(time, this, keys));
 
     // counts the coints inside the level and write this number inside the coinsSpan
-    let coinFiltered = actors.filter(actor => actor.type == "coin")
-    coinsSpan.innerText = coinFiltered.length;
+    let coinFiltered = actors.filter(actor => actor.type == "coin");
+    coinsSpan.innerText = scoreFormater(coinFiltered.length);
     
     let newState = new State(this.level, actors, this.status);
 
@@ -470,7 +472,7 @@ Coin.prototype.collide = function(state) {
     coinSound.play();
 
     let filtered = state.actors.filter(a => a != this);
-    scoreSpan.innerText = scoreCounter += 100;
+    scoreSpan.innerText = scoreFormater(scoreCounter += 100);
 
     let status = state.status;
     // if touching the last coins the status is changed to "won"
@@ -605,7 +607,6 @@ function runAnimation(frameFunc) {
 
 // switch for gameBlocker, prevents start of a new gameDisplay if playButton is 
 // clicked repeatedly while game is already running
-
 let switcher = true;
 
 function runLevel(level, Display){
@@ -619,7 +620,6 @@ function runLevel(level, Display){
             display.syncState(state);
 
             if(state.status == "playing"){
-                console.log(state.status);
                 switcher = false; // switcher to false -> no new game created when clicking playButton
                 return true;
             } else if (ending > 0){
@@ -628,7 +628,6 @@ function runLevel(level, Display){
             } else {
                 display.clear();
                 resolve(state.status);
-                console.log(state.status);
                 return false;
             }
         })
@@ -686,8 +685,8 @@ function createHiScoreList() {
         hiScoreObj.name = playerName;
         hiScoreObj.score = scoreCounter;
         hiScoreArr.push(hiScoreObj);
-        scoreCounter = 0; // resets the scoreCounter for the next player
-        scoreSpan.innerText = scoreCounter;
+        // scoreCounter = 0; // resets the scoreCounter for the next player
+        // scoreSpan.innerText = scoreCounter;
         // create highScoreList as DOM-elements
         hiScoreArr.forEach(player => {
             let listItem = document.createElement('li');
@@ -699,3 +698,18 @@ function createHiScoreList() {
     }
 }
 
+/// ----------- Score Formating ----------- ///
+
+function scoreFormater(score) {
+    let result = ''
+    if (score >= 1000 && score < 10000) { // for scores with 4 digits -> 1000 -> 01000
+        result = '0' + score.toString();
+    } else if (score >= 100 && score < 1000) { // for scores with 3 digits -> 100 -> 00100
+        result = '00' + score.toString();
+    } else if (score < 10) { // for coin-scores with 1 digit -> 7 -> 07
+        result = '0' + score.toString();
+    } else {
+        result = score.toString();
+    }
+    return result;
+}

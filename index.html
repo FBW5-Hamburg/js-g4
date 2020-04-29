@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jump & Run</title>
     <script src="./js/index.js"></script>
-    <script src="./js/fbw5_level.js"></script>
-    <!-- <script src="./js/levels03.js"></script> -->
+    <!-- <script src="./js/fbw5_level.js"></script> -->
+    <script src="./js/levels04.js"></script>
     <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
@@ -19,24 +19,25 @@
 
     <!-- Player Name Input -->
     <input id="playerNameInput" type="text" placeholder="PlayerName">
-    <!-- <input id="hiScoreInput" type="text" placeholder="HighScore"> -->
     <button id="playButton">Play!</button>
 
     <!-- scoresDisplay -->
     <div id="scoreContainer">
         <div>Level: <span id="levelSpan">0</span></div>
         <div>Lives: <span id="livesSpan">0</span></div>
-        <div>Coins: <span id="coinsSpan">0</span></div>
-        <div>Score: <span id="scoreSpan">0</span></div>
+        <div>Coins: <span id="coinsSpan">00</span></div>
+        <div>Score: <span id="scoreSpan">00000</span></div>
     </div>
-    <!-- messages: "You've won" or "Game Over" -->
+
+    <!-- messages: "You've Won" or "Game Over" -->
     <div id="messageContainer">
-        <h1 id="message"></h1>
+        <h1 id="message">Press Play!<br>Use Arrow Keys!<br>Avoid The Lava!<br>Collect All Coins!</h1>
+        <br>
+        <!-- hiScoreList -->
+        <ul id="highScoreList"></ul>
     </div>
-    <!-- hiScoreList -->
-    <ul id="highScoreList">
-        <!-- <li>Felix: 1000</li> -->
-    </ul>
+
+
 
 
 </body>
