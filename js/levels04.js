@@ -1,12 +1,14 @@
 
-  // ".": "empty",
-  // "#": "wall",
-  // "+": "lava",
-  // "@": Player,
-  // "o": Coin,
-  // "=": Lava,
-  // "|": Lava,
-  // "v": Lava
+// const levelChars = {
+//   ".": "empty",
+//   "#": "wall",
+//   "+": "lava",
+//   "@": Player,
+//   "o": Coin,
+//   "=": Lava,
+//   "|": Lava,
+//   "v": Lava
+// };
 
 var GAME_LEVELS = [` 
 ..............................
